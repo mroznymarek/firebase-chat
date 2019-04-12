@@ -1,15 +1,17 @@
 import React from 'react'
 
-import { database } from './firebaseConf'
+import { auth, database } from './firebaseConf'
+import Snackbar from '@material-ui/core/Snackbar'
 
 import MessageList from './MessageList'
 import NewMessageForm from './NewMessageForm'
-import { auth } from 'firebase';
 
 class Chat extends React.Component {
     state = {
         messages: null,
         newMessageText: '',
+        isSnackbarOpen: false,
+        snackbarMessage: '',
     }
 
     componentDidMount() {
@@ -35,21 +37,22 @@ class Chat extends React.Component {
             date: Date.now(),
             author: {
                 displayName: auth.currentUser.displayName,
-                email: auth.current.email,
+                email: auth.currentUser.email,
                 photoURL: auth.currentUser.photoURL
             }
         })
         .then(
             () => {
-                this.set.State({
+                this.setState({
                     newMessageText: '',
+                    isSnackbarOpen: true,
+                    snackbarMessage: 'Wysłano wiadomość!'
                 })
             }
         )
     }
 
-
-    render() {
+    render() {  
         return (
             <div>
                 <MessageList
@@ -57,9 +60,15 @@ class Chat extends React.Component {
                 />
                 <NewMessageForm
                     newMessageText={this.state.newMessageText}
-                    onNewMessageTextChanged={this.state.onNewMessageTextChanged}
-                    onMessageSent={this.state.onMessageSent}
-
+                    onNewMessageTextChanged={this.onNewMessageTextChanged}
+                    onMessageSent={this.onMessageSent}
+                />
+                <Snackbar
+                    autoHideDuration={3000}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    open={this.state.isSnackbarOpen}
+                    onClose={() => this.setState({isSnackbarOpen: false})}
+                    message={this.state.snackbarMessage}
                 />
             </div>
         )
