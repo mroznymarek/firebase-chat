@@ -3,7 +3,7 @@ import React from 'react'
 
 const App = (props) => (
   <div>
-      Chat
+      App
   </div>       
 )
 
