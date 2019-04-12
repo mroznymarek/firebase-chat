@@ -2,6 +2,9 @@ import React from 'react'
 
 import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
+import Switch from '@material-ui/core/Switch'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+
 
 const styles = {
   paper: {
@@ -17,6 +20,18 @@ const NewMessageForm = (props) => (
   <Paper
     style={styles.paper}
     >
+    <div>
+      <FormControlLabel
+      control={
+      <Switch
+      checked={props.isFavFilterActive}
+      onChange={props.toggleFavFilterActive}
+      />
+      }
+      label={'Wyświetlaj tylko ulubione'}
+    />      
+    </div>
+    
     <form
       onSubmit={event => {
         event.preventDefault()

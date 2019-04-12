@@ -12,6 +12,7 @@ class Chat extends React.Component {
         newMessageText: '',
         isSnackbarOpen: false,
         snackbarMessage: '',
+        isFavFilterActive: false,
     }
 
     componentDidMount() {
@@ -41,33 +42,57 @@ class Chat extends React.Component {
                 photoURL: auth.currentUser.photoURL
             }
         })
-        .then(
-            () => {
-                this.setState({
-                    newMessageText: '',
-                    isSnackbarOpen: true,
-                    snackbarMessage: 'Wysłano wiadomość!'
-                })
-            }
-        )
+            .then(
+                () => {
+                    this.setState({
+                        newMessageText: '',
+                        isSnackbarOpen: true,
+                        snackbarMessage: 'Wysłano wiadomość!'
+                    })
+                }
+            )
     }
 
-    render() {  
+    toggleFavorite = (message) => {
+        const clickedMessage = message.key
+        const currentUserUid = auth.currentUser.uid
+        const isFav = message.isFav && message.isFav[currentUserUid]
+        const ref = database.ref(`JFDDL7/chat/${clickedMessage}/isFav/${currentUserUid}`)
+
+        if (isFav) {
+            ref.remove()
+        } else {
+            ref.set(true)
+        }
+
+
+    }
+
+    toggleFavFilterActive = () => this.setState({
+        isFavFilterActive: !this.state.isFavFilterActive,
+    })
+
+    render() {
         return (
             <div>
                 <MessageList
                     messages={this.state.messages}
+                    toggleFavorite={this.toggleFavorite}
+                    isFavFilterActive={this.state.isFavFilterActive}
                 />
                 <NewMessageForm
                     newMessageText={this.state.newMessageText}
                     onNewMessageTextChanged={this.onNewMessageTextChanged}
                     onMessageSent={this.onMessageSent}
+
+                    isFavFilterActive={this.state.isFavFilterActive}
+                    toggleFavFilterActive={this.toggleFavFilterActive}
                 />
                 <Snackbar
                     autoHideDuration={3000}
                     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                     open={this.state.isSnackbarOpen}
-                    onClose={() => this.setState({isSnackbarOpen: false})}
+                    onClose={() => this.setState({ isSnackbarOpen: false })}
                     message={this.state.snackbarMessage}
                 />
             </div>
