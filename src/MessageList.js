@@ -1,5 +1,11 @@
 import React from 'react'
+
+import List from '@material-ui/core/List'
+
 import Message from './Message'
+import { reverse } from 'dns';
+
+
 
 const MessagesList = (props) => {
     const messagesArray = (
@@ -10,22 +16,23 @@ const MessagesList = (props) => {
                     key,
                 })
             )
+            .reverse()
     )
 
     return (
-        <div>
+        <List>
             {
                 messagesArray.map(
                     message => (
                         <Message
                             key={message.key}
-                            message= {message.text}
+                            message= {message}
                         />
                     )
                 )
             }
 
-        </div>
+        </List>
     )
 }
 
